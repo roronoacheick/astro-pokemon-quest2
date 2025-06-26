@@ -1,4 +1,4 @@
-
+// src/components/CaptureView.js
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -23,7 +23,7 @@ export default function CaptureView({ pokemon, onSuccess, onCancel }) {
     const rect = containerRef.current.getBoundingClientRect();
     setPokePos({
       x: rect.width / 2 - POKE_SIZE / 2,
-      y: rect.height / 2 - POKE_SIZE / 2
+      y: rect.height / 2 - POKE_SIZE / 2,
     });
   }, []);
 
@@ -33,7 +33,7 @@ export default function CaptureView({ pokemon, onSuccess, onCancel }) {
       const { clientWidth: w, clientHeight: h } = containerRef.current;
       setPokePos({
         x: Math.random() * (w - POKE_SIZE),
-        y: Math.random() * (h - POKE_SIZE)
+        y: Math.random() * (h - POKE_SIZE),
       });
     }, 2000);
     return () => clearInterval(iv);
@@ -109,19 +109,19 @@ export default function CaptureView({ pokemon, onSuccess, onCancel }) {
           className="pointer-events-none absolute w-8 h-8 rounded-full border-2 border-white"
           style={{
             left: cursorPos.x - 16,
-            top: cursorPos.y - 16
+            top: cursorPos.y - 16,
           }}
         />
       )}
 
       {/* Barre de progression */}
       {capturing && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-white bg-opacity-30 rounded">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 w-3/4 h-3 bg-white bg-opacity-30 rounded z-40">
           <div
             className="h-full bg-white rounded"
             style={{
               width: `${progress * 100}%`,
-              transition: `width ${INTERVAL}ms linear`
+              transition: `width ${INTERVAL}ms linear`,
             }}
           />
           <span className="absolute w-full text-center text-xs text-white">
@@ -144,7 +144,7 @@ export default function CaptureView({ pokemon, onSuccess, onCancel }) {
             setCapturing(false);
             onCancel();
           }}
-          className="absolute top-4 right-4 text-white z-10"
+          className="fixed top-16 right-4 text-white z-50"
         >
           Annuler
         </button>

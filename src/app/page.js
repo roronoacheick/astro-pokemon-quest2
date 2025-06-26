@@ -1,4 +1,4 @@
-// src/app/page.js
+
 'use client';
 
 import Link from 'next/link';
@@ -23,7 +23,7 @@ export default function HomePage() {
     <main className="flex flex-col items-center p-4">
       <h1 className="text-2xl font-bold mb-6">Astro Pokémon Quest</h1>
 
-      <div className="flex space-x-4 overflow-x-auto mb-6">
+      <div className="flex flex-wrap gap-4 justify-center overflow-x-auto mb-6">
         {planets.map(({ name, slug, img }) => {
           const unlocked = unlockedPlanets.includes(name);
           return (
