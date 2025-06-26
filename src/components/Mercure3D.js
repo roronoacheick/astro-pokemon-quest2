@@ -1,3 +1,4 @@
+// src/components/Mercure3D.js
 'use client';
 
 import { Engine, Scene } from 'react-babylonjs';
@@ -7,8 +8,7 @@ import {
   MeshBuilder,
   StandardMaterial,
   Texture,
-  Vector3,
-  Color3
+  Vector3
 } from '@babylonjs/core';
 import { useRef } from 'react';
 import { Joystick } from 'react-joystick-component';
@@ -16,7 +16,7 @@ import { Joystick } from 'react-joystick-component';
 export default function Mercure3D({ pointCount, onPointIntersect }) {
   const sceneRef = useRef(null);
 
-  // Contrôle caméra via joystick
+  // Gère le mouvement de la caméra via le joystick
   const handleMove = ({ x, y }) => {
     const cam = sceneRef.current?.activeCamera;
     if (cam) {
@@ -26,13 +26,13 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
   };
 
   return (
-    <div className="relative w-full h-full bg-black">
+    <div className="relative w-full h-full">
       <Engine antialias adaptToDeviceRatio canvasId="mercure-canvas">
         <Scene
           onSceneMount={({ canvas, scene }) => {
             sceneRef.current = scene;
 
-            // 1) Caméra orbitale
+            // Caméra orbitale
             const camera = new ArcRotateCamera(
               'camera',
               Math.PI / 2,
@@ -46,25 +46,33 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
             camera.upperBeta = Math.PI;
             camera.wheelPrecision = 50;
 
-            // 2) Lumière
+            // Lumière
             new HemisphericLight('light', new Vector3(0, 1, 0), scene);
 
-            // 3) Sphère texturée de Mercure
+            // Sphère texturée avec mercury2.jpg placé directement dans public/
             const sphere = MeshBuilder.CreateSphere(
               'mercure',
               { segments: 32, diameter: 1.8 },
               scene
             );
             const mat = new StandardMaterial('mercureMat', scene);
-            mat.diffuseTexture = new Texture('/planets/mercury.jpg', scene);
+            const tex = new Texture(
+              '/mercury2.jpg',
+              scene,
+              false,
+              false,
+              Texture.TRILINEAR_SAMPLINGMODE,
+              () => console.log('✅ Texture mercury2.jpg chargée'),
+              (msg, ex) => console.error('❌ Échec chargement texture mercury2.jpg', msg, ex)
+            );
+            mat.diffuseTexture = tex;
             sphere.material = mat;
 
-            // 4) Génération des points noirs
-            const markers = [];
+            // Points noirs
             for (let i = 0; i < pointCount; i++) {
-              const u = Math.random() * 2 * Math.PI;
+              const u = Math.random() * Math.PI * 2;
               const v = Math.acos(2 * Math.random() - 1);
-              const r = 0.91; // juste au-dessus de la surface
+              const r = 0.91;
               const x = r * Math.sin(v) * Math.cos(u);
               const y = r * Math.sin(v) * Math.sin(u);
               const z = r * Math.cos(v);
@@ -76,18 +84,15 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
               );
               pt.position = new Vector3(x, y, z);
               const matP = new StandardMaterial(`matP-${i}`, scene);
-              matP.diffuseColor = new Color3(0, 0, 0);
+              matP.diffuseColor = new Vector3(0, 0, 0);
               pt.material = matP;
-              markers.push(pt);
             }
 
-            // 5) Détection de collision au centre de l'écran
+            // Collision center-screen
             scene.onBeforeRenderObservable.add(() => {
-              const engine = scene.getEngine();
-              const pick = scene.pick(
-                engine.getRenderWidth() / 2,
-                engine.getRenderHeight() / 2
-              );
+              const w = scene.getEngine().getRenderWidth();
+              const h = scene.getEngine().getRenderHeight();
+              const pick = scene.pick(w / 2, h / 2);
               if (pick.hit && pick.pickedMesh?.name.startsWith('point-')) {
                 const idx = parseInt(pick.pickedMesh.name.split('-')[1], 10);
                 onPointIntersect(idx);
@@ -98,14 +103,9 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
         />
       </Engine>
 
-      {/* Joystick tactile */}
-      <div className="absolute bottom-4 left-4 w-32 h-32">
-        <Joystick
-          size={100}
-          baseColor="#333"
-          stickColor="#999"
-          move={handleMove}
-        />
+      {/* Joystick mobile */}
+      <div className="absolute bottom-4 left-4 w-32 h-32 z-30">
+        <Joystick size={100} baseColor="#333" stickColor="#999" move={handleMove} />
       </div>
     </div>
   );

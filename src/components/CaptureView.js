@@ -152,3 +152,4 @@ export default function CaptureView({ pokemon, onSuccess, onCancel }) {
     </div>
   );
 }
+    
