@@ -15,7 +15,8 @@
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-babylonjs": "^3.2.5-beta.2",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-joystick-component": "^6.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
