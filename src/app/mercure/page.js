@@ -5,7 +5,9 @@ import { fetchPokemonDetails } from '@/lib/api';
 import { useGame } from '@/components/context/GameContext';
 import Mercure3D from '@/components/Mercure3D';
 import CaptureView from '@/components/CaptureView';
+import PokemonCard from '@/components/PokemonCard';
 
+// 20 Pokémon logiques pour Mercure
 const planetPokemons = [
   'charmander','vulpix','growlithe','ponyta','rapidash',
   'magmar','flareon','geodude','graveler','golem',
@@ -14,48 +16,66 @@ const planetPokemons = [
 ];
 
 export default function MercurePage() {
-  // mode.view === '3d' or 'capture', pokemonIndex holds the selected index
-  const [mode, setMode] = useState({ view: '3d', pokemonIndex: null });
-  const [selected, setSelected] = useState(null);
-  const [species] = useState(planetPokemons);
+  const [mode, setMode] = useState('3d'); 
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const { catchPokemon } = useGame();
 
-  // Quand on touche un point
+  // Quand Mercure3D détecte un point
   const handlePointIntersect = async (index) => {
-    setMode({ view: 'capture', pokemonIndex: index });
-    const name = species[index];
+    setMode('capture');
+    const name = planetPokemons[index];
     try {
       const details = await fetchPokemonDetails(name);
-      setSelected(details);
+      setSelectedPokemon(details);
     } catch (err) {
-      console.error('Erreur fetchPokemonDetails:', err);
+      console.error(err);
+      setMode('3d');
     }
   };
 
-  // Quand la capture est réussie
-  const handleCaptureComplete = () => {
-    if (selected) {
-      catchPokemon(selected);
+  // Quand la capture est terminée avec succès
+  const handleCaptureSuccess = () => {
+    if (selectedPokemon) {
+      catchPokemon(selectedPokemon);
+      setMode('card');
+    } else {
+      setMode('3d');
     }
-    setMode({ view: '3d', pokemonIndex: null });
-    setSelected(null);
+  };
+
+  // Si on annule la capture
+  const handleCancel = () => {
+    setMode('3d');
+  };
+
+  // Fermeture de la carte
+  const handleCloseCard = () => {
+    setMode('3d');
+    setSelectedPokemon(null);
   };
 
   return (
     <div className="w-screen h-screen">
-      {mode.view === '3d' ? (
+      {mode === '3d' && (
         <Mercure3D
-          pointCount={species.length}
+          pointCount={planetPokemons.length}
           onPointIntersect={handlePointIntersect}
         />
-      ) : (
-        selected && (
-          <CaptureView
-            pokemon={selected}
-            onSuccess={handleCaptureComplete}
-            onCancel={() => setMode({ view: '3d', pokemonIndex: null })}
-          />
-        )
+      )}
+
+      {mode === 'capture' && selectedPokemon && (
+        <CaptureView
+          pokemon={selectedPokemon}
+          onSuccess={handleCaptureSuccess}
+          onCancel={handleCancel}
+        />
+      )}
+
+      {mode === 'card' && selectedPokemon && (
+        <PokemonCard
+          pokemon={selectedPokemon}
+          onClose={handleCloseCard}
+        />
       )}
     </div>
   );

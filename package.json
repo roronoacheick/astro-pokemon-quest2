@@ -12,6 +12,7 @@
     "@babylonjs/core": "^8.13.1",
     "@babylonjs/gui": "^8.13.1",
     "@babylonjs/loaders": "^8.13.1",
+    "framer-motion": "^12.19.1",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-babylonjs": "^3.2.5-beta.2",
