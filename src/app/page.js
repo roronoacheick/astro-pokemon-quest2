@@ -1,8 +1,8 @@
-
+// src/app/page.js
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useGame } from '@/components/context/GameContext';
 
 const planets = [
@@ -16,16 +16,14 @@ const planets = [
   { name: 'Neptune', slug: 'neptune', img: '/planets/neptune.jpg' },
 ];
 
-
 export default function HomePage() {
   const { unlockedPlanets } = useGame();
-
-  console.log('unlockedPlanets:', unlockedPlanets); // **DEBUG**
 
   return (
     <main className="flex flex-col items-center p-4">
       <h1 className="text-2xl font-bold mb-6">Astro Pokémon Quest</h1>
-      <div className="flex space-x-4 overflow-x-auto">
+
+      <div className="flex space-x-4 overflow-x-auto mb-6">
         {planets.map(({ name, slug, img }) => {
           const unlocked = unlockedPlanets.includes(name);
           return (
@@ -53,6 +51,13 @@ export default function HomePage() {
           );
         })}
       </div>
+
+      <Link
+        href="/collection"
+        className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-500 transition"
+      >
+        Ma collection →
+      </Link>
     </main>
   );
 }
