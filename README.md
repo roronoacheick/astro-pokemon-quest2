@@ -84,4 +84,4 @@ Créer le fichier d'environnement :
 cp .env.example .env.local
 
 Dans .env.local, définir :
-NEXT_PUBLIC_POKEAPI_BASE=https://pokeapi.co/api/v2
+NEXT_PUBLIC_POKEAPI_BASE
