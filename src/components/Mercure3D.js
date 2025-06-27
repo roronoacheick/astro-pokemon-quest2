@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Engine, Scene } from 'react-babylonjs';
@@ -11,7 +10,8 @@ import {
   Vector3,
   ActionManager,
   ExecuteCodeAction,
-  Animation
+  Animation,
+  Color4
 } from '@babylonjs/core';
 import { useRef } from 'react';
 import { Joystick } from 'react-joystick-component';
@@ -28,13 +28,22 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div
+      className="relative w-full h-full"
+      style={{
+        backgroundImage: "url('/stars_milky_way.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       <Engine antialias adaptToDeviceRatio canvasId="mercure-canvas">
         <Scene
           onSceneMount={({ canvas, scene }) => {
+            // rendre le fond transparent pour voir le div parent
+            scene.clearColor = new Color4(0, 0, 0, 0);
             sceneRef.current = scene;
 
-            
+            // Caméra orbitale
             const camera = new ArcRotateCamera(
               'camera',
               Math.PI / 2,
@@ -48,10 +57,10 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
             camera.upperBeta = Math.PI;
             camera.wheelPrecision = 50;
 
-           
+            // Lumière hémisphérique
             new HemisphericLight('light', new Vector3(0, 1, 0), scene);
 
-           
+            // Sphère texturée
             const sphere = MeshBuilder.CreateSphere(
               'mercure',
               { segments: 32, diameter: 1.8 },
@@ -61,7 +70,7 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
             mat.diffuseTexture = new Texture('/mercury2.jpg', scene);
             sphere.material = mat;
 
-            
+            // Points cliquables
             for (let i = 0; i < pointCount; i++) {
               const u = Math.random() * Math.PI * 2;
               const v = Math.acos(2 * Math.random() - 1);
@@ -80,11 +89,10 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
               matP.diffuseColor = new Vector3(0, 0, 0);
               pt.material = matP;
 
-              
+              // ActionManager click + zoom
               pt.actionManager = new ActionManager(scene);
               pt.actionManager.registerAction(
                 new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
-                 
                   const zoomAnim = new Animation(
                     'zoomIn',
                     'radius',

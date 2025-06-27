@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -7,12 +6,12 @@ import { useGame } from '@/components/context/GameContext';
 
 const planets = [
   { name: 'Mercure', slug: 'mercure', img: '/planets/mercury.jpg' },
-  { name: 'Vénus',   slug: 'venus',   img: '/planets/venus.jpg' },
-  { name: 'Terre',   slug: 'terre',   img: '/planets/earth.jpg' },
-  { name: 'Mars',    slug: 'mars',    img: '/planets/mars.jpg' },
+  { name: 'Vénus', slug: 'venus', img: '/planets/venus.jpg' },
+  { name: 'Terre', slug: 'terre', img: '/planets/earth.jpg' },
+  { name: 'Mars', slug: 'mars', img: '/planets/mars.jpg' },
   { name: 'Jupiter', slug: 'jupiter', img: '/planets/jupiter.jpg' },
   { name: 'Saturne', slug: 'saturne', img: '/planets/saturn.jpg' },
-  { name: 'Uranus',  slug: 'uranus',  img: '/planets/uranus.jpg' },
+  { name: 'Uranus', slug: 'uranus', img: '/planets/uranus.jpg' },
   { name: 'Neptune', slug: 'neptune', img: '/planets/neptune.jpg' },
 ];
 
@@ -20,8 +19,13 @@ export default function HomePage() {
   const { unlockedPlanets } = useGame();
 
   return (
-    <main className="flex flex-col items-center p-4">
-      <h1 className="text-2xl font-bold mb-6">Astro Pokémon Quest</h1>
+    <main
+      className="flex flex-col items-center p-4 min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/stars_milky_way.jpg')" }}
+    >
+      <h1 className="text-2xl font-bold mb-6 text-white drop-shadow-lg">
+        Astro Pokémon Quest
+      </h1>
 
       <div className="flex flex-wrap gap-4 justify-center overflow-x-auto mb-6">
         {planets.map(({ name, slug, img }) => {
@@ -46,7 +50,9 @@ export default function HomePage() {
                   🔒
                 </div>
               )}
-              <span className="block text-center mt-2">{name}</span>
+              <span className="block text-center mt-2 text-white drop-shadow">
+                {name}
+              </span>
             </Link>
           );
         })}
