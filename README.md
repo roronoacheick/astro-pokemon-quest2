@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Astro Pokémon Quest
 
-## Getting Started
+Astro Pokémon Quest est une application web interactive développée avec Next.js, React et Babylon.js. Elle propose un mini-jeu de capture de Pokémon sur la planète Mercure, alliant vue 3D sphérique et vue paysage immersive.
 
-First, run the development server:
+ Fonctionnalités actuelles
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Menu Principal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Affiche le système solaire (Mercure à Neptune) sur un fond étoilé (stars_milky_way.jpg).
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Seule Mercure est débloquée au lancement (les autres planètes apparaissent « verrouillées »).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Lien vers la Collection des Pokémon capturés.
 
-## Learn More
+Vue 3D de Mercure (/mercure)
 
-To learn more about Next.js, take a look at the following resources:
+Sphère texturée avec mercury2.jpg, fond transparent pour laisser apparaître le ciel étoilé.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+20 points noirs cliquables répartis aléatoirement.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Joystick tactile ou glisser pour faire tourner la planète.
 
-## Deploy on Vercel
+Clic sur un point déclenche une animation de zoom puis bascule en mode capture.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Mode Paysage (Capture)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fond planétaire (mercury_view.jpg) couvrant toute la zone.
+
+Pokémon animé se déplaçant en douceur.
+
+Bouton Pokéball pour activer le mode capture.
+
+Curseur personnalisé et jauge de progression.
+
+Mécanique : 5 secondes cumulées passées sur le Pokémon pour réussir la capture.
+
+Bouton Annuler pour revenir en vue 3D à tout moment.
+
+Fiche Pokémon (Carte TCG)
+
+Apparaît après capture, sur fond étoilé.
+
+Affiche l’artwork officiel, le nom, les types et les statistiques.
+
+Bouton Retour au 3D pour continuer la chasse.
+
+Collection (/collection)
+
+Liste tous les Pokémon capturés (jusqu’à 20) avec image, nom, types, taille, poids et stats.
+
+Emplacements vides jusqu’à 20 cases.
+
+Design sombre et immersif, cohérent avec le thème spatial.
+
+Contexte et persistance
+
+Stockage en LocalStorage pour conserver captures et débloquage de planètes.
+
+Navigation
+
+Navbar fixe en haut (Accueil, Collection).
+
+ Technologies utilisées
+
+Framework : Next.js (App Router)
+
+3D : Babylon.js (react-babylonjs)
+
+APIs : PokéAPI (détails Pokémon)
+
+Stockage : LocalStorage via Context API
+
+Animations : Framer Motion
+
+ Installation
+
+Cloner le dépôt :
+
+git clone https://github.com/roronoacheick/astro-pokemon-quest.git
+cd astro-pokemon-quest
+
+Créer le fichier d'environnement :
+
+cp .env.example .env.local
+
+Dans .env.local, définir :
+NEXT_PUBLIC_POKEAPI_BASE
