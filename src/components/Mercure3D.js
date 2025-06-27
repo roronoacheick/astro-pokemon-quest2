@@ -10,7 +10,8 @@ import {
   Texture,
   Vector3,
   ActionManager,
-  ExecuteCodeAction
+  ExecuteCodeAction,
+  Animation
 } from '@babylonjs/core';
 import { useRef } from 'react';
 import { Joystick } from 'react-joystick-component';
@@ -22,7 +23,7 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
     const cam = sceneRef.current?.activeCamera;
     if (cam) {
       cam.alpha += x * 0.005;
-      cam.beta  -= y * 0.005;
+      cam.beta -= y * 0.005;
     }
   };
 
@@ -47,10 +48,10 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
             camera.upperBeta = Math.PI;
             camera.wheelPrecision = 50;
 
-            
+           
             new HemisphericLight('light', new Vector3(0, 1, 0), scene);
 
-            
+           
             const sphere = MeshBuilder.CreateSphere(
               'mercure',
               { segments: 32, diameter: 1.8 },
@@ -79,16 +80,27 @@ export default function Mercure3D({ pointCount, onPointIntersect }) {
               matP.diffuseColor = new Vector3(0, 0, 0);
               pt.material = matP;
 
-              // Ajouter ActionManager pour détecter le clic sur chaque point
+              
               pt.actionManager = new ActionManager(scene);
               pt.actionManager.registerAction(
-                new ExecuteCodeAction(
-                  ActionManager.OnPickTrigger,
-                  () => {
+                new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
+                 
+                  const zoomAnim = new Animation(
+                    'zoomIn',
+                    'radius',
+                    60,
+                    Animation.ANIMATIONTYPE_FLOAT,
+                    Animation.ANIMATIONLOOPMODE_CONSTANT
+                  );
+                  zoomAnim.setKeys([
+                    { frame: 0, value: camera.radius },
+                    { frame: 30, value: 0.5 }
+                  ]);
+                  camera.animations = [zoomAnim];
+                  scene.beginAnimation(camera, 0, 30, false, 1, () => {
                     onPointIntersect(i);
-                  }
-                )
-              );
+                  });
+                }))
             }
           }}
         />
